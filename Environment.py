@@ -1,11 +1,11 @@
-import copy
-
 import Cell
 
 import pygame
 from pygame import Vector2
 from random import randint
 import sys
+import copy
+
 
 class Boundary(pygame.sprite.Sprite):
     def __init__(self, pointA, pointB, surface, color=None):
@@ -43,7 +43,7 @@ class World:
             y2 = randint(0, self.height)
             self.walls.append(Boundary(Vector2(x1, y1), Vector2(x2, y2), self.wall_surface))
 
-    def addCells(self, cell=Cell.RayParticle(), cell_count=1):
+    def addCells(self, cell=Cell.Cell(), cell_count=1):
         for i in range(cell_count):
             randomCell = copy.deepcopy(cell)
             randomCell.pos = Vector2((randint(0, self.width), randint(0, self.height)))
@@ -58,7 +58,7 @@ class World:
                     sys.exit()
                 if event.type == pygame.MOUSEMOTION:
                     for cell in self.cells:
-                        if cell.movement_type == Cell.RayParticle.MovementType.User:
+                        if cell.movement_type == Cell.Cell.MovementType.User:
                             cell.move(pos=Vector2(pygame.mouse.get_pos()))
                         else:
                             cell.move()
@@ -68,35 +68,35 @@ class World:
                     if len(keys) != 0:
                         if keys[pygame.K_d] or keys[pygame.K_RIGHT]:
                             for cell in self.cells:
-                                if cell.movement_type == Cell.RayParticle.MovementType.User:
+                                if cell.movement_type == Cell.Cell.MovementType.User:
                                     cell_pos = cell.pos
                                     cell.move(pos=Vector2(cell_pos.x + 1, cell_pos.y))
                                 else:
                                     cell.move()
                         if keys[pygame.K_l] or keys[pygame.K_LEFT]:
                             for cell in self.cells:
-                                if cell.movement_type == Cell.RayParticle.MovementType.User:
+                                if cell.movement_type == Cell.Cell.MovementType.User:
                                     cell_pos = cell.pos
                                     cell.move(pos=Vector2(cell_pos.x - 1, cell_pos.y))
                                 else:
                                     cell.move()
                         if keys[pygame.K_w] or keys[pygame.K_UP]:
                             for cell in self.cells:
-                                if cell.movement_type == Cell.RayParticle.MovementType.User:
+                                if cell.movement_type == Cell.Cell.MovementType.User:
                                     cell_pos = cell.pos
                                     cell.move(pos=Vector2(cell_pos.x, cell_pos.y + 1))
                                 else:
                                     cell.move()
                         if keys[pygame.K_s] or keys[pygame.K_DOWN]:
                             for cell in self.cells:
-                                if cell.movement_type == Cell.RayParticle.MovementType.User:
+                                if cell.movement_type == Cell.Cell.MovementType.User:
                                     cell_pos = cell.pos
                                     cell.move(pos=Vector2(cell_pos.x, cell_pos.y - 1))
                                 else:
                                     cell.move()
 
             self.screen.fill([0, 0, 0])
-            for i in self.walls:
+            for wall in self.walls:
                 self.screen.blit(self.wall_surface, (0, 0))
 
             for cell in self.cells:

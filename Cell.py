@@ -1,15 +1,12 @@
-import math
-
 import RayTrace
 
 import pygame
 from pygame import Vector2
 from math import cos, sin, radians
 from scipy.spatial import distance
-
 from enum import Enum
 
-class RayParticle:
+class Cell:
     class MovementType(Enum):
         User = 0
         Auto = 1
@@ -17,6 +14,7 @@ class RayParticle:
     def __init__(self, position=Vector2(1, 1), radius=4, angle=0, rayCount=8, ray_cell_detect_count=1, color=None, movement_type=MovementType.Auto):
         if color is None:
             color = [255, 255, 255]
+
         self.pos = position
         self.radius = radius
         self.angle = angle
@@ -83,9 +81,9 @@ class RayParticle:
         return distances
 
     def move(self, pos=None, angle=None):
-        if pos == None:
+        if pos is None:
             pos = self.pos
-        if angle == None:
+        if angle is None:
             angle = self.angle
 
         self.pos = pos
