@@ -8,13 +8,11 @@ import copy
 
 
 class Boundary(pygame.sprite.Sprite):
-    def __init__(self, pointA, pointB, surface, color=None):
+    def __init__(self, pointA, pointB, surface, color=[255, 255, 255]):
         pygame.sprite.Sprite.__init__(self)
         self.a = pointA
         self.b = pointB
         self.surface = surface
-        if color is None:
-            color = [255, 255, 255]
         pygame.draw.line(self.surface, color, self.a, self.b)
 
 class World:
@@ -35,13 +33,13 @@ class World:
 
         self.cells = []
 
-    def addWalls(self, wall_count=5):
+    def addWalls(self, wall_count=5, color=[255, 255, 255]):
         for i in range(wall_count):
             x1 = randint(0, self.width)
             y1 = randint(0, self.height)
             x2 = randint(0, self.width)
             y2 = randint(0, self.height)
-            self.walls.append(Boundary(Vector2(x1, y1), Vector2(x2, y2), self.wall_surface))
+            self.walls.append(Boundary(Vector2(x1, y1), Vector2(x2, y2), self.wall_surface, color=color))
 
     def addCells(self, cell=Cell.Cell(), cell_count=1):
         for i in range(cell_count):
@@ -60,8 +58,6 @@ class World:
                     for cell in self.cells:
                         if cell.movement_type == Cell.Cell.MovementType.User:
                             cell.move(pos=Vector2(pygame.mouse.get_pos()))
-                        else:
-                            cell.move()
 
                 if event.type == pygame.KEYDOWN:
                     keys = pygame.key.get_pressed()
@@ -71,29 +67,25 @@ class World:
                                 if cell.movement_type == Cell.Cell.MovementType.User:
                                     cell_pos = cell.pos
                                     cell.move(pos=Vector2(cell_pos.x + 1, cell_pos.y))
-                                else:
-                                    cell.move()
                         if keys[pygame.K_l] or keys[pygame.K_LEFT]:
                             for cell in self.cells:
                                 if cell.movement_type == Cell.Cell.MovementType.User:
                                     cell_pos = cell.pos
                                     cell.move(pos=Vector2(cell_pos.x - 1, cell_pos.y))
-                                else:
-                                    cell.move()
                         if keys[pygame.K_w] or keys[pygame.K_UP]:
                             for cell in self.cells:
                                 if cell.movement_type == Cell.Cell.MovementType.User:
                                     cell_pos = cell.pos
                                     cell.move(pos=Vector2(cell_pos.x, cell_pos.y + 1))
-                                else:
-                                    cell.move()
                         if keys[pygame.K_s] or keys[pygame.K_DOWN]:
                             for cell in self.cells:
                                 if cell.movement_type == Cell.Cell.MovementType.User:
                                     cell_pos = cell.pos
                                     cell.move(pos=Vector2(cell_pos.x, cell_pos.y - 1))
-                                else:
-                                    cell.move()
+
+            for cell in self.cells:
+                if cell.movement_type == Cell.Cell.MovementType.Auto:
+                    cell.randomMove(Vector2(self.width, self.height))
 
             self.screen.fill([0, 0, 0])
             for wall in self.walls:

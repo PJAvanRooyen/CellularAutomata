@@ -5,16 +5,14 @@ from pygame import Vector2
 from math import cos, sin, radians
 from scipy.spatial import distance
 from enum import Enum
+from random import randint
 
 class Cell:
     class MovementType(Enum):
         User = 0
         Auto = 1
 
-    def __init__(self, position=Vector2(1, 1), radius=4, angle=0, rayCount=8, ray_cell_detect_count=1, color=None, movement_type=MovementType.Auto):
-        if color is None:
-            color = [255, 255, 255]
-
+    def __init__(self, position=Vector2(1, 1), radius=4, angle=0, rayCount=8, ray_cell_detect_count=1, color=[255, 255, 255], movement_type=MovementType.Auto):
         self.pos = position
         self.radius = radius
         self.angle = angle
@@ -79,6 +77,27 @@ class Cell:
                     pygame.draw.line(surface, self.color, self.pos, pt)
             distances.append(dmin)
         return distances
+
+    def randomMove(self, max_pos=Vector2(10000000, 10000000)):
+        x = self.pos.x + randint(-3, 3)
+        if x < 0:
+            x = 0
+        elif x > max_pos.x:
+            x = max_pos.x
+
+        y = self.pos.y + randint(-3, 3)
+        if y < 0:
+            y = 0
+        elif y > max_pos.y:
+            y = max_pos.y
+
+        angle = self.angle + randint(-1, 1)
+        if angle < 0:
+            angle = 359
+        elif angle > 360:
+            angle = 1
+
+        self.move(Vector2(x, y), angle)
 
     def move(self, pos=None, angle=None):
         if pos is None:
