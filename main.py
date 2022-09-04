@@ -5,9 +5,11 @@ from pygame import Vector2
 if __name__ == '__main__':
     world = Environment.World()
     # world.addWalls(5)
-    world.addCells(cell_count=2)
 
-    userCell = Cell.RayParticle(Vector2(250, 250), movement_type=Cell.RayParticle.MovementType.User)
+    hostCell = Cell.RayParticle(movement_type=Cell.RayParticle.MovementType.Auto, ray_cell_detect_count=0)
+    world.addCells(cell=hostCell, cell_count=10)
+
+    userCell = Cell.RayParticle(movement_type=Cell.RayParticle.MovementType.User, ray_cell_detect_count=2)
     world.addCells(userCell, 1)
 
     world.run()

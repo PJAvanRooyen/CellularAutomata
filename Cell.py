@@ -25,13 +25,16 @@ class RayParticle:
         self.ray_length = 200
 
         self.rays = []
-        self.step = 360//rayCount
-        for i in range(0, 360, self.step):
-            self.rays.append(RayTrace.Ray(self.pos, Vector2(cos(radians(i)), sin(radians(i))), self.ray_length))
+        self.step = 0
+        if rayCount != 0:
+            self.step = 360//rayCount
+            for i in range(0, 360, self.step):
+                self.rays.append(RayTrace.Ray(self.pos, Vector2(cos(radians(i)), sin(radians(i))), self.ray_length))
 
         self.rays_cell_detect = []
-        for i in range(0, 360, 360//ray_cell_detect_count):
-            self.rays_cell_detect.append(RayTrace.Ray(self.pos, Vector2(cos(radians(i)), sin(radians(i))), self.ray_length))
+        if ray_cell_detect_count != 0:
+            for i in range(0, 360, 360//ray_cell_detect_count):
+                self.rays_cell_detect.append(RayTrace.Ray(self.pos, Vector2(cos(radians(i)), sin(radians(i))), self.ray_length))
 
     def show(self, surface):
         pygame.draw.circle(surface, self.color, (int(self.pos.x), int(self.pos.y)), self.radius)
@@ -55,11 +58,12 @@ class RayParticle:
 
     def seeCell(self, surface, cells, render):
         distances = []
+        seen_cell_positions = []
         for ray in self.rays_cell_detect:
             dmin = 1000000000
             pt = None
             for cell in cells:
-                if cell.pos == self.pos:
+                if cell.pos == self.pos or cell.pos in seen_cell_positions:
                     continue
 
                 # cells always detect each other if they are within ray length.
@@ -70,9 +74,11 @@ class RayParticle:
                         dmin = d
                         pt = cell.pos
 
-            if pt is not None and render:
-                pygame.draw.circle(surface, self.color, [int(pt.x), int(pt.y)], 4)
-                pygame.draw.line(surface, self.color, self.pos, pt)
+            if pt is not None:
+                seen_cell_positions.append(pt)
+                if render:
+                    pygame.draw.circle(surface, self.color, [int(pt.x), int(pt.y)], 4)
+                    pygame.draw.line(surface, self.color, self.pos, pt)
             distances.append(dmin)
         return distances
 
@@ -86,5 +92,6 @@ class RayParticle:
         for i in self.rays:
             i.pos = self.pos
         self.angle = angle
-        for i in range(0, 360, self.step):
-            self.rays[i//self.step].dir = Vector2(cos(radians(i - angle)), sin(radians(i - angle)))
+        if self.step != 0 and len(self.rays) != 0:
+            for i in range(0, 360, self.step):
+                self.rays[i//self.step].dir = Vector2(cos(radians(i - angle)), sin(radians(i - angle)))
