@@ -84,7 +84,7 @@ class World:
                                     cell.move(pos=Vector2(cell_pos.x, cell_pos.y - 1))
 
             for cell in self.cells:
-                if cell.movement_type == Cell.Cell.MovementType.Auto:
+                if cell.movement_type == Cell.Cell.MovementType.Auto_Random:
                     cell.randomMove(Vector2(self.width, self.height))
 
             self.screen.fill([0, 0, 0])

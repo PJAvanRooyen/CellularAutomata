@@ -10,9 +10,9 @@ from random import randint
 class Cell:
     class MovementType(Enum):
         User = 0
-        Auto = 1
+        Auto_Random = 1
 
-    def __init__(self, position=Vector2(1, 1), radius=4, angle=0, rayCount=8, ray_cell_detect_count=1, color=[255, 255, 255], movement_type=MovementType.Auto):
+    def __init__(self, position=Vector2(1, 1), radius=4, angle=0, rayCount=8, ray_cell_detect_count=1, color=[255, 255, 255], movement_type=MovementType.Auto_Random):
         self.pos = position
         self.radius = radius
         self.angle = angle
